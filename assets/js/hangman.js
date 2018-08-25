@@ -1,11 +1,14 @@
 // Word/Hint pairing arrays
-const word = ["Momonga", "Nazarick", "Yggdrasil"]
+const word = ["MOMONGA", "NAZARICK", "YGGDRASIL", "DEMIURGE", "PlEADIES"]
 const hint = [  "This is Ainz Oal Gown's actual name.", 
                 "This is the home where Ainz and his guardians live.",
-                "This is the name of the game Overlord's world is based off of."]
+                "This is the name of the game Overlord's world is based off of.",
+                "The guardian with the 'highest IQ', according to Ainz",
+                "The name of Ainz's personal combat maid squad."]
 
 // Elements used from html doc
 var wordElement = document.getElementById('word');
+var hintElement = document.getElementById('hint');
 var winsElement = document.getElementById('wins');
 var loseElement = document.getElementById('lose');
 var lettersGuessedElement = document.getElementById('lettersGuessed');
@@ -42,24 +45,40 @@ class Hangman{
         return this.letters;
     }
 
-    // Initializes the current word to guess in underscores
+    // Initializes the current word (that needs to be guessed) in underscores
     initializeWord() {
         this.currentWord = [];
         for (var i = 0; i < this.correctWord.length; i++) {
             this.currentWord.push('_');
         }
         wordElement.innerHTML = this.currentWord.join(' ');
-
+        hintElement.innerHTML = this.currentHint;
     }
 
-    updateGuesses(letter) {
+    // Takes the letter guessed by the user and test it vs the correct word and letters already guessed
+    guessLetter(letter) {
         if (letter.charCodeAt(0) <= 122 && letter.charCodeAt(0) >= 97)  // Checks if key pressed is between a-z
         {
-            if (this.letters.indexOf(letter) == -1) {   // If letter hasn't been guessed already
-                // Check word for letter
+            letter = letter.toUpperCase();  // Since the word and letters will be all in upper case
+            // Check if letter is already guessed
+            if (this.letters.indexOf(letter) == -1) {
+                // Checks if the correct word has the letter
+                if (this.correctWord.includes(letter)) {    
+                    // Go through the correct word to find each instances of the letter and display it
+                    for (var i = 0; i < this.correctWord.length; i++) {
+                        if (this.correctWord[i] == letter)
+                            this.currentWord[i] = letter;
+                    }                    
+                    wordElement.innerHTML = this.currentWord.join(' ');
+                }
+                else {    // If the letter guessed is incorrect (not in the correct word)
+                    // Display a message?  Play some kind of sound?
+                }
                 this.letters.push(letter);      // Adds letter guessed into end of array
-                lettersGuessedElement.innerHTML = this.letters.join(', ');  //Adds leading comma
+                lettersGuessedElement.innerHTML = this.letters.join(', ');  // Adds leading comma
                 this.guesses--;
+                if (!this.isWin())   // Check win condition, check lose condition if win condition is false
+                    this.isLose();
             }
             else {
                 alert ("Letter already guessed.");
@@ -68,6 +87,18 @@ class Hangman{
         else {
             alert("Invalid key");
         }
+    }
+
+    isWin(){    // Check win condition
+        if (currentWord.indexOf('_') === -1) {
+            // You win message
+            this.wins++;
+            return true;
+        }
+    }
+
+    isLose(){   // Check lose condition
+        if (this.guesses);
     }
 
 }
@@ -81,7 +112,7 @@ winsElement.textContent += (" " + hangman.wins);
 loseElement.textContent += (" " + hangman.lose);
 
 document.onkeyup = function(event) {
-    hangman.updateGuesses(event.key);
+    hangman.guessLetter(event.key);
 }
 
 
