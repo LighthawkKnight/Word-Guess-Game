@@ -1,10 +1,10 @@
-//Word/Hint pairing arrays
+// Word/Hint pairing arrays
 const word = ["Momonga", "Nazarick", "Yggdrasil"]
 const hint = [  "This is Ainz Oal Gown's actual name.", 
                 "This is the home where Ainz and his guardians live.",
                 "This is the name of the game Overlord's world is based off of."]
 
-//Elements used from html doc
+// Elements used from html doc
 var wordElement = document.getElementById('word');
 var winsElement = document.getElementById('wins');
 var loseElement = document.getElementById('lose');
@@ -53,8 +53,21 @@ class Hangman{
     }
 
     updateGuesses(letter) {
-        this.letters.push(letter);      // Adds letter guessed into end of array
-        lettersGuessedElement.innerHTML = this.letters.join(', ');  //Adds leading comma
+        if (letter.charCodeAt(0) <= 122 && letter.charCodeAt(0) >= 97)  // Checks if key pressed is between a-z
+        {
+            if (this.letters.indexOf(letter) == -1) {   // If letter hasn't been guessed already
+                // Check word for letter
+                this.letters.push(letter);      // Adds letter guessed into end of array
+                lettersGuessedElement.innerHTML = this.letters.join(', ');  //Adds leading comma
+                this.guesses--;
+            }
+            else {
+                alert ("Letter already guessed.");
+            }
+        }
+        else {
+            alert("Invalid key");
+        }
     }
 
 }
@@ -64,14 +77,13 @@ var index = Math.floor(Math.random() * word.length);       // Set Random startin
 var hangman = new Hangman(word[index], hint[index]);
 
 hangman.initializeWord();
+winsElement.textContent += (" " + hangman.wins);
+loseElement.textContent += (" " + hangman.lose);
 
 document.onkeyup = function(event) {
     hangman.updateGuesses(event.key);
 }
 
-
-winsElement.textContent += (" " + this.wins);
-loseElement.textContent += (" " + this.lose);
 
 // alert(hangman.currentWord + " - " + hangman.currentHint);
 
