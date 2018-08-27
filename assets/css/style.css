@@ -1,0 +1,13 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+#banner{
+    height: 50%; 
+    width: 50%;
+}
+
+.page_header {
+    padding-bottom: 30px;
+}

@@ -1,10 +1,30 @@
 // Word/Hint pairing arrays
-const word = ["MOMONGA", "NAZARICK", "YGGDRASIL", "DEMIURGE", "PLEADIES"]
-const hint = [  "This is Ainz Oal Gown's actual name.", 
+const word = [  "MOMONGA", "ALBEDO", "NAZARICK", "YGGDRASIL", "DEMIURGE", "PLEIADES", "JALDABAOTH", "SHALLTEAR", 
+                "RUBEDO", "BAHARUTH", "STRONOFF", "EVILEYE", "RENNER", "FORESIGHT", "EMMOT", "BUKUBUKUCHAGAMA", 
+                "TAKEMIKAZUCHI", "GARGANTUA", "REMEDIOS", "CLEMENTINE", "SUCCULENT", "ZARYUSU", "HAMSUKE"]
+const hint = [  "This is Ainz's actual name, whom he was known as back during the game.",
+                "The overseer of the floor guardians and is Ainz's second in command",
                 "This is the home where Ainz and his guardians live.",
-                "This is the name of the game Overlord's world is based off of.",
+                "This is the name of the game where Ainz and Nazarick originally came from.",
                 "The guardian with the 'highest IQ', according to Ainz",
-                "The name of Ainz's personal combat maid squad."]
+                "The name of Ainz's personal combat maid squad.",
+                "The alias coined by Demiurge that appears to be the leader of the demon army by humans.",
+                "The 1st-3rd floor guardian of Nazarick that is a true vampire as well as a holy valkyrie.",
+                "The strongest entity in Nazarick, who is Albedo's sister.",
+                "The empire ruled by Emperor Jircniv Rune Farlord el Nix.",
+                "The last name of the Warrior Captain of the Re-Estize Kingdom.",
+                "An adamantite ranked adventurer who is the most powerful magic caster of Blue Rose.",
+                "The 3rd princess of the Re-Estize kingdom.  A genius with prodigal intellect since youth.",
+                "The name of the worker group Arche is a member of.",
+                "The family name of the new chief of Carne Village.",
+                "The creator of Aura and Mare, who was a voice actress in real life.",
+                "The creator of Cocytus, who is one of the 41 Supreme Beings.",
+                "The 4th floor guardian of Nazarick who is physically the strongest, being a massive construct.",
+                "The leader of the Paladin Order of the Roble Holy Kingdom.",
+                "A rogue warrior from Zuranon, who would murder adventurers and take their ID plates as trophies.",
+                "A member of the Six Arms who uses a fighting style that combines illusion magic and swordplay.",
+                "A lizardman who is both a great warrior and highly intelligent.  Wielder of Frost Pain.",
+                "Known as the 'Wise King of the Forest' who becomes Momon's mount."]
 
 // Elements used from html doc
 var wordElement = document.getElementById('word');
@@ -18,23 +38,29 @@ var sysElement = document.getElementById('sysMessage');
 class Hangman{
 
     constructor(cw = "Overlord", h = "This page's theme!", w = 0, l = 0) {        
-        this.correctWord = cw;
-        this.currentHint = h;
+        this.correctWord = cw;      // The correct word to be gussed
+        this.currentHint = h;       // The hint for the correct word
         this.wins = w;
         this.lose = l;
-        this.guesses = 14;       // Number of guesses allowed per attempt
+        this.guesses = this.calcGuesses(cw.length);   // Number of guesses allowed per attempt
         this.letters = [];      // Array of letters guessed
         this.currentWord = [];  // The displayed word being guessed  
+        this.gameOver = false;
     }
 
     // Starts/Restarts the hangman game
     initializeGame() {
-        // Set random word/hint pairing
-        var index = Math.floor(Math.random() * word.length);
+        // Set random word/hint pairing, not equal to the previous one.
+        var index;
+        do {
+            index = Math.floor(Math.random() * word.length);
+        } while(word[index] == this.correctWord);
+
         this.correctWord = word[index];
         this.currentHint = hint[index];
         this.guesses = this.calcGuesses(this.correctWord.length);
         this.letters = [];
+        this.gameOver = false;
 
         // Fill in the word display with underscores
         this.currentWord = [];
@@ -68,7 +94,7 @@ class Hangman{
                     wordElement.innerHTML = this.currentWord.join(' ');
                 }
                 else {    // If the letter guessed is incorrect (not in the correct word)
-                    // Display a message?  Play some kind of sound?
+                    // ToDo:  Display a message?  Play some kind of sound?
                 }
                 this.letters.push(letter);      // Adds letter guessed into end of array
                 lettersGuessedElement.innerHTML = this.letters.join(', ');  // Adds leading comma
@@ -78,12 +104,12 @@ class Hangman{
                 if (!this.isWin())   // Check win condition, check lose condition if win condition is false
                     this.isLose();
             }
-            else {
+            else {  // If letter has already been guessed
                 alert ("Letter already guessed.");
             }
         }
-        else {
-            alert("Invalid key");
+        else {  // If a key that is not a-z has been pressed
+            alert("Invalid key.  Please guess a letter between A-Z");
         }
     }
 
@@ -94,13 +120,14 @@ class Hangman{
 
     // Helper function that checks win condition
     isWin(){    
-        if (this.currentWord.indexOf('_') == -1) {      // Works for words with no spaces.  Must change if it has spaces
+        if (this.currentWord.indexOf('_') == -1) {      // Works for words with no spaces.  Must change if I want to implement spaces
             // You win message
             //wordElement.innerHTML = this.correctWord;
             //try settimeout here....
             alert("You win!");
             this.wins++;
-            this.initializeGame();
+            winsElement.innerHTML = (" " + this.wins);
+            this.gameOver = true;
             return true;
         }
     }
@@ -111,8 +138,14 @@ class Hangman{
             // Lose message
             alert("You lose");
             this.lose++;
-            this.initializeGame();
+            loseElement.innerHTML = (" " + this.lose);
+            this.gameOver = true;
         }
+    }
+
+    // Returns a boolean value whether the current round is over or not
+    isGameOver() {
+        return this.gameOver;
     }
 
 }
@@ -122,7 +155,10 @@ var hangman = new Hangman();
 hangman.initializeGame();
 
 document.onkeyup = function(event) {
-    hangman.guessLetter(event.key);
+    if (!hangman.isGameOver())
+        hangman.guessLetter(event.key);
+    else
+        hangman.initializeGame();
 }
 
 
