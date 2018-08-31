@@ -1,13 +1,22 @@
 body {
     background-color: black;
     color: white;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
 }
 
 #banner{
-    height: 50%; 
-    width: 50%;
+    height: 30%; 
+    width: 30%;
+    padding-bottom: 30px;
 }
 
-.page_header {
-    padding-bottom: 30px;
+#word {
+    font-size: 50px;
+    font-family: 'Comic Sans MS', Georgia, 'Times New Roman', Times, serif;
+}
+
+#leftColumn {
+}
+
+#rightColumn {
 }

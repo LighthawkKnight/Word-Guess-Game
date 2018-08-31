@@ -18,7 +18,7 @@ const hint = [  "This is Ainz's actual name, whom he was known as back during th
                 "The name of the worker group Arche is a member of.",
                 "The family name of the new chief of Carne Village.",
                 "The creator of Aura and Mare, who was a voice actress in real life.",
-                "The creator of Cocytus, who is one of the 41 Supreme Beings.",
+                "The creator of Cocytus, and one of the 41 Supreme Beings.",
                 "The 4th floor guardian of Nazarick who is physically the strongest, being a massive construct.",
                 "The leader of the Paladin Order of the Roble Holy Kingdom.",
                 "A rogue warrior from Zuranon, who would murder adventurers and take their ID plates as trophies.",
@@ -86,7 +86,7 @@ class Hangman{
             if (this.letters.indexOf(letter) == -1) {
                 // Checks if the correct word has the letter
                 if (this.correctWord.includes(letter)) {    
-                    // Go through the correct word to find each instances of the letter and display it
+                    // Go through the correct word to find each instance of the letter and display it
                     for (var i = 0; i < this.correctWord.length; i++) {
                         if (this.correctWord[i] == letter)
                             this.currentWord[i] = letter;
@@ -160,6 +160,7 @@ document.onkeyup = function(event) {
     else
         hangman.initializeGame();
 }
+
 
 
 
