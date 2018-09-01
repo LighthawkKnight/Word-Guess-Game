@@ -1,7 +1,7 @@
 body {
     background-color: black;
     color: white;
-    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
 }
 
 #banner{
@@ -15,8 +15,15 @@ body {
     font-family: 'Comic Sans MS', Georgia, 'Times New Roman', Times, serif;
 }
 
-#leftColumn {
+.gameFont {
+    font-size: 25px;
+    font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 }
 
-#rightColumn {
+.winLose {
+    font-size: 40px;
+}
+
+#leftColumn, #rightColumn {
+    padding: 30px;
 }

@@ -26,6 +26,10 @@ const hint = [  "This is Ainz's actual name, whom he was known as back during th
                 "A lizardman who is both a great warrior and highly intelligent.  Wielder of Frost Pain.",
                 "Known as the 'Wise King of the Forest' who becomes Momon's mount."]
 
+// test
+// const word = ["SUPERLONGASSWORD"];
+// const hint = ["debug"];
+
 // Elements used from html doc
 var wordElement = document.getElementById('word');
 var hintElement = document.getElementById('hint');
@@ -68,6 +72,10 @@ class Hangman{
             this.currentWord.push('_');
         }
 
+        // Size adjustment for longer words
+        if (this.currentWord.length > 10)
+            wordElement.style.fontSize = "35px";
+
         // Display it all in html
         wordElement.innerHTML = this.currentWord.join(' ');
         hintElement.innerHTML = this.currentHint;
@@ -100,7 +108,7 @@ class Hangman{
                 this.letters.push(letter);      // Adds letter guessed into end of array
                 lettersGuessedElement.innerHTML = this.letters.join(', ');  // Adds leading comma
                 this.guesses--;
-                guessElement.innerHTML = this.guesses;
+                guessElement.innerHTML = (" " + this.guesses);
 
                 if (!this.isWin())   // Check win condition, check lose condition if win condition is false
                     this.isLose();
@@ -114,9 +122,9 @@ class Hangman{
         }
     }
 
-    // Helper function containing formula to calculate guesses allowed - can change if needed
+    // Helper function containing formula to calculate guesses allowed
     calcGuesses(wordLength) {
-        return Math.floor(wordLength * 1.3);
+            return Math.floor(wordLength * 1.3);
     }
 
     // Helper function that checks win condition
@@ -151,7 +159,9 @@ class Hangman{
 
 }
 
-//main                                                      
+//main
+
+
 var hangman = new Hangman();
 hangman.initializeGame();
 

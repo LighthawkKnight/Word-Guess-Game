@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Ubuntu'>
     <link rel="stylesheet" href = "assets/css/style.css">
     <title>Hangman</title>
 
@@ -29,37 +30,36 @@
     <div class = "container">
         <div class = "row">
             <div class = "col-6 border border-primary" id = "leftColumn">
-                <div class = "container">
-                    <div class = "row">
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsam excepturi quis deleniti corrupti error obcaecati fugit sapiente, modi, dignissimos similique voluptates soluta veritatis quia quaerat, sint expedita quod unde nisi.</p>
+                <div class = "container-flud text-xs-center text-xl-center">
+                    <div class = "row gameFont winLose">
+                        <div class = "col-6 text-xs-right text-xl-right text-success">
+                            Win:<span id = "wins"></span>
+                        </div>
+                        <div class = "col-6 text-xs-left text-xl-left text-danger">
+                            Lose:<span id = "lose"></span>
+                        </div>
+                    
                     </div> <div class = "row">
                         <h1>Hint:</h1>
                         <div id = "hint"></div>
                     </div>
                 </div>
             </div>
-            <div class = "col-6 border border-secondary text-center" id = "rightColumn">
-                <div class = "container">
-                    <div class = "row">
-                        <div id = "word"></div>
-                    </div>
-                    <div class = "row">
-                        <div id = "sysMessage"></div>
-                    </div>
-                    <div class = "row">
-                        <div id = "lettersGuessedTitle">Letters Guessed:</div>
-                    </div>
-                    <div class = "row">
-                        <div id = "lettersGuessed">    
-                        </div>
-                    </div>
+            <div class = "col-6 border border-secondary" id = "rightColumn">
+                <div class = "container-fluid text-xs-center text-xl-center">
+                    <div id = "word"></div>
+                    <br>
+                    <div class = "gameFont">Gusses left:<span id = "guesses"></span></div>
+                    <br>
+                    <div class = "gameFont">Letters Guessed:</div>
+                    <br>
+                    <div class = "gameFont" id = "lettersGuessed"></div>
                 </div>
             </div>
-            <br>
         </div>
+        <br>
+    </div>
         <br><br>
-        <div class = "row">
-        </div>
             
         <br>
         <div class = "row">
@@ -75,9 +75,6 @@
 
 
     
-    <h2>Guesses remaining: </h2>
-    <div id = "guesses" style = "float: left;">
-    </div>
     <br>
     <h2>Letters Guessed:</h2> 
     <br>
