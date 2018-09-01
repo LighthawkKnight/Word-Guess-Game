@@ -75,6 +75,7 @@ class Hangman{
         loseElement.innerHTML = (" " + this.lose);
         guessElement.innerHTML = (" " + this.guesses);
         lettersGuessedElement.innerHTML = "";
+        sysElement.innerHTML = "Game Start"
     }
 
     // Takes the letter guessed by the user and test it vs the correct word and letters already guessed
