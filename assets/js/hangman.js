@@ -41,6 +41,10 @@ var sysElement = document.getElementById('sysMessage');
 var hintBtnElement = document.getElementById('hintButton')
 var costElement = document.getElementById('hintCost');
 
+// Sound files
+var invalid = new Audio('assets/sfx/se_invalid.wav');
+
+
 class Hangman{
 
     constructor(cw = "Overlord", h = "This page's theme!", w = 0, l = 0, g = 12) {        
@@ -51,12 +55,13 @@ class Hangman{
         this.guesses = g;   // Number of guesses allowed per attempt
         this.letters = [];      // Array of letters guessed
         this.currentWord = [];  // The displayed word being guessed
-        this.hintActive = true; // If the hint interface is enabled
-        this.isHint();
+        this.hintActive = false; // If the hint interface is enabled 
+        hintBtnElement.setAttribute('disabled', '');
+        this.started = false;
         this.gameOver = false;
     }
 
-    // Starts/Restarts the hangman game
+    // Starts/Restarts each round of Hangman
     initializeGame() {
         // Set random word/hint pairing, not equal to the previous one.
         var index;
@@ -95,7 +100,7 @@ class Hangman{
         loseElement.innerHTML = (" " + this.lose);
         guessElement.innerHTML = (" " + this.guesses);
         lettersGuessedElement.innerHTML = "";
-        sysElement.innerHTML = "Game Start";
+        sysElement.innerHTML = "Game Start!";
     }
 
     // Takes the letter guessed by the user and test it vs the correct word and letters already guessed
@@ -113,9 +118,10 @@ class Hangman{
                             this.currentWord[i] = letter;
                     }                    
                     wordElement.innerHTML = this.currentWord.join(' ');
+                    sysElement.innerHTML = "Nice!"
                 }
                 else {    // If the letter guessed is incorrect (not in the correct word)
-                    // ToDo:  Display a message?  Play some kind of sound?
+                    sysElement.innerHTML = "Try again."
                 }
                 this.letters.push(letter);      // Adds letter guessed into end of array
                 lettersGuessedElement.innerHTML = this.letters.join(', ');  // Adds leading comma
@@ -127,15 +133,25 @@ class Hangman{
                     this.isLose();
             }
             else {  // If letter has already been guessed
-                alert ("Letter already guessed.");
+                sysElement.innerHTML = "Letter already guessed.";
+                this.flashText(sysElement, "yellow");
             }
         }
         else {  // If a key that is not a-z has been pressed
-            alert("Invalid key.  Please guess a letter between A-Z");
+            sysElement.innerHTML = "Invalid key.  Enter a letter between a-z";
+            this.flashMsg(sysElement, "yellow");
         }
     }
 
-    
+    // Returns true if the game has started yet, false otherwise
+    hasStarted() {
+        return this.started;
+    }
+
+    // Sets the started flag to true, and begins the hangman game
+    startGame() {
+        this.started = true;
+    }
 
     // Returns a boolean value whether the current round is over or not
     isGameOver() {
@@ -151,17 +167,38 @@ class Hangman{
         hintElement.classList.remove('d-none');
     }
 
-    // Helper function containing formula to calculate guesses allowed
+    // Helper function containing formula to calculate guesses allowed, change if needed
     calcGuesses(wordLength) {
         if (wordLength > 9)
             return 13;
         else
-            return Math.floor(wordLength * 1.3);
+            return Math.ceil(wordLength * 1.3);
     }
 
-    // Helper function containing formula to calculate cost of showing hint
+    // Helper function containing formula to calculate cost of showing hint, change if needed
     calcHintCost(wordLength) {
         return Math.ceil(wordLength * 0.3);
+    }
+
+    // Helper function that makes the arg element's text flash the arg color twice, 
+    // (the only way I know how so far)
+    flashText(element, color) {
+        function a(){
+            element.style.color = color;
+            window.setTimeout(b, 125);
+        }
+        function b(){
+            element.style.color = "white";
+            window.setTimeout(c, 125);
+        }
+        function c(){
+            element.style.color = color;
+            window.setTimeout(d, 125);
+        }
+        function d(){
+            element.style.color = "white"
+        }
+        a();
     }
 
     // Helper function for checking if the hint button should be enabled or disabled
@@ -169,10 +206,12 @@ class Hangman{
         // Will only run if the button is still enabled
         if (this.hintActive) {
             var cost = this.calcHintCost(this.correctWord.length);
+            // If the cost of displaying the hint impossible, disable the button
             if (cost >= this.guesses) {
                 hintBtnElement.setAttribute('disabled', '');
                 this.hintActive = false;
             }
+            // If it is possible, display the cost on the button
             else
                 costElement.innerHTML = (" " + cost + " ");
         }
@@ -181,10 +220,9 @@ class Hangman{
     // Helper function that checks win condition
     isWin(){    
         if (this.currentWord.indexOf('_') == -1) {      // Works for words with no spaces.  Must change if I want to implement spaces
-            // You win message
-            //wordElement.innerHTML = this.correctWord;
-            //try settimeout here....
-            alert("You win!");
+            sysElement.innerHTML = "You win!"
+            this.flashText(sysElement,"limegreen");
+            this.flashText(wordElement, "limegreen");
             this.wins++;
             winsElement.innerHTML = (" " + this.wins);
             this.gameOver = true;
@@ -195,8 +233,8 @@ class Hangman{
     // Helper function that checks lose condition
     isLose(){   
         if (this.guesses == 0) {
-            // Lose message
-            alert("You lose");
+            sysElement.innerHTML = "You lose.  The correct word was " + this.correctWord;
+            this.flashText(sysMessage,"red");
             this.lose++;
             loseElement.innerHTML = (" " + this.lose);
             this.gameOver = true;
@@ -209,10 +247,13 @@ class Hangman{
 
 
 var hangman = new Hangman();
-hangman.initializeGame();
 
 document.onkeyup = function(event) {
-    if (!hangman.isGameOver())
+    if (!hangman.hasStarted()) {
+        hangman.startGame();
+        hangman.initializeGame();
+    }    
+    else if (!hangman.isGameOver())
         hangman.guessLetter(event.key);
     else
         hangman.initializeGame();

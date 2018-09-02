@@ -40,14 +40,16 @@
                     </div>
                     <br>
                     <br>
-                    <div class = "text-xs-center text-xl-center" id = "sysMessage" ></div>
+                    <div class = "text-xs-center text-xl-center" id = "sysMessage" >
+                        Welcome to an Overlord-themed version of the hangman game!  Press any key to start playing.
+                    </div>
                     <br>
                     <br>
                     <button type="button" class="btn btn-lg btn-primary" id = "hintButton">
                         Spend <span id = hintCost></span> guesses to show hint
-                    </button>
+                    </button><br>
                     <div class = "row">
-                        <div class = "d-none" id = "hint"></div>
+                        <div class = "pt-4 pt-xl-4 d-none" id = "hint"></div>
                     </div>
                     
                 </div>
@@ -65,6 +67,17 @@
             </div>
         </div>
         <br>
+    </div>
+    <br><br>
+    <div class = "container-fluid">
+        <div class = "row text-xl-center text-xs-center">
+            <div class = "col-12">
+            <audio controls autoplay>
+                <source src="assets/bgm/01 GO CRY GO.mp3" type="audio/mpeg">
+                If you're reading this, your browser does not support this audio element.
+            </audio>
+            </div>
+        </div>
     </div>
 
     <script src="assets/js/hangman.js"></script>
