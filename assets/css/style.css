@@ -20,7 +20,7 @@ body {
     font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 }
 
-.winLose {
+#scoreboard {
     font-size: 40px;
 }
 

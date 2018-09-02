@@ -38,17 +38,21 @@ var loseElement = document.getElementById('lose');
 var guessElement = document.getElementById('guesses');
 var lettersGuessedElement = document.getElementById('lettersGuessed');
 var sysElement = document.getElementById('sysMessage');
+var hintBtnElement = document.getElementById('hintButton')
+var costElement = document.getElementById('hintCost');
 
 class Hangman{
 
-    constructor(cw = "Overlord", h = "This page's theme!", w = 0, l = 0) {        
+    constructor(cw = "Overlord", h = "This page's theme!", w = 0, l = 0, g = 12) {        
         this.correctWord = cw;      // The correct word to be gussed
         this.currentHint = h;       // The hint for the correct word
         this.wins = w;
         this.lose = l;
-        this.guesses = this.calcGuesses(cw.length);   // Number of guesses allowed per attempt
+        this.guesses = g;   // Number of guesses allowed per attempt
         this.letters = [];      // Array of letters guessed
-        this.currentWord = [];  // The displayed word being guessed  
+        this.currentWord = [];  // The displayed word being guessed
+        this.hintActive = true; // If the hint interface is enabled
+        this.isHint();
         this.gameOver = false;
     }
 
@@ -63,6 +67,7 @@ class Hangman{
         this.correctWord = word[index];
         this.currentHint = hint[index];
         this.guesses = this.calcGuesses(this.correctWord.length);
+        this.hintActive = true;
         this.letters = [];
         this.gameOver = false;
 
@@ -74,16 +79,23 @@ class Hangman{
 
         // Size adjustment for longer words
         if (this.currentWord.length > 10)
-            wordElement.style.fontSize = "35px";
+            wordElement.style.fontSize = "30px";
 
-        // Display it all in html
+        // Reset hint button elements
+        if (!hintElement.classList.contains('d-none'))
+            hintElement.classList.add('d-none');
+        if (hintBtnElement.hasAttribute('disabled'))
+            hintBtnElement.removeAttribute('disabled');
+
+        // Display all in html
+        this.isHint();
         wordElement.innerHTML = this.currentWord.join(' ');
         hintElement.innerHTML = this.currentHint;
         winsElement.innerHTML = (" " + this.wins);
         loseElement.innerHTML = (" " + this.lose);
         guessElement.innerHTML = (" " + this.guesses);
         lettersGuessedElement.innerHTML = "";
-        sysElement.innerHTML = "Game Start"
+        sysElement.innerHTML = "Game Start";
     }
 
     // Takes the letter guessed by the user and test it vs the correct word and letters already guessed
@@ -108,6 +120,7 @@ class Hangman{
                 this.letters.push(letter);      // Adds letter guessed into end of array
                 lettersGuessedElement.innerHTML = this.letters.join(', ');  // Adds leading comma
                 this.guesses--;
+                this.isHint();
                 guessElement.innerHTML = (" " + this.guesses);
 
                 if (!this.isWin())   // Check win condition, check lose condition if win condition is false
@@ -122,9 +135,47 @@ class Hangman{
         }
     }
 
+    
+
+    // Returns a boolean value whether the current round is over or not
+    isGameOver() {
+        return this.gameOver;
+    }
+
+    // Displays the hint for the current word
+    showHint() {
+        hintBtnElement.setAttribute('disabled', '');
+        this.guesses -= this.calcHintCost(this.correctWord.length)
+        guessElement.innerHTML = this.guesses;
+        this.hintActive = false;
+        hintElement.classList.remove('d-none');
+    }
+
     // Helper function containing formula to calculate guesses allowed
     calcGuesses(wordLength) {
+        if (wordLength > 9)
+            return 13;
+        else
             return Math.floor(wordLength * 1.3);
+    }
+
+    // Helper function containing formula to calculate cost of showing hint
+    calcHintCost(wordLength) {
+        return Math.ceil(wordLength * 0.3);
+    }
+
+    // Helper function for checking if the hint button should be enabled or disabled
+    isHint() {
+        // Will only run if the button is still enabled
+        if (this.hintActive) {
+            var cost = this.calcHintCost(this.correctWord.length);
+            if (cost >= this.guesses) {
+                hintBtnElement.setAttribute('disabled', '');
+                this.hintActive = false;
+            }
+            else
+                costElement.innerHTML = (" " + cost + " ");
+        }
     }
 
     // Helper function that checks win condition
@@ -152,11 +203,6 @@ class Hangman{
         }
     }
 
-    // Returns a boolean value whether the current round is over or not
-    isGameOver() {
-        return this.gameOver;
-    }
-
 }
 
 //main
@@ -170,6 +216,10 @@ document.onkeyup = function(event) {
         hangman.guessLetter(event.key);
     else
         hangman.initializeGame();
+}
+
+hintBtnElement.onclick = function() {
+    hangman.showHint();
 }
 
 
