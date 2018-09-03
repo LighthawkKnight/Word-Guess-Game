@@ -35,3 +35,8 @@ body {
 #leftColumn, #rightColumn {
     padding: 30px;
 }
+
+#song {
+    font-size: 25px;
+    color: silver;
+}

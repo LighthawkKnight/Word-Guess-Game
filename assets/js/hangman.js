@@ -25,10 +25,13 @@ const hint = [  "This is Ainz's actual name, whom he was known as back during th
                 "A member of the Six Arms who uses a fighting style that combines illusion magic and swordplay.",
                 "A lizardman who is both a great warrior and highly intelligent.  Wielder of Frost Pain.",
                 "Known as the 'Wise King of the Forest' who becomes Momon's mount."]
-
-// test
-// const word = ["SUPERLONGASSWORD"];
-// const hint = ["debug"];
+// BGM pairing arrays
+const bgm = [   "assets/bgm/01 GO CRY GO.mp3", 
+                "assets/bgm/01.VORACITY.mp3", 
+                "assets/bgm/01 Clattanoia.mp3"];
+const bgmSong = [   'Overlord II OP - "GO CRY GO"<br> by OxT',
+                    'Overlord III OP - "VORACITY"<br> by MYTH & ROID',
+                    'Overlord I OP - "Clattanoia"<br> by OxT']
 
 // Elements used from html doc
 var wordElement = document.getElementById('word');
@@ -41,8 +44,13 @@ var sysElement = document.getElementById('sysMessage');
 var hintBtnElement = document.getElementById('hintButton')
 var costElement = document.getElementById('hintCost');
 
-// Sound files
+// Audio 
+var musicPlayer = document.getElementById('player');
+var bgmElement = document.getElementById('bgm');
+var nowPlayingElement = document.getElementById('nowPlaying');
 var invalid = new Audio('assets/sfx/se_invalid.wav');
+var youwin = new Audio('assets/sfx/win.mp3');
+var youlose = new Audio('assets/sfx/lose.mp3');
 
 
 class Hangman{
@@ -98,7 +106,7 @@ class Hangman{
         hintElement.innerHTML = this.currentHint;
         winsElement.innerHTML = (" " + this.wins);
         loseElement.innerHTML = (" " + this.lose);
-        guessElement.innerHTML = (" " + this.guesses);
+        guessElement.innerHTML = ("  " + this.guesses);
         lettersGuessedElement.innerHTML = "";
         sysElement.innerHTML = "Game Start!";
     }
@@ -127,7 +135,7 @@ class Hangman{
                 lettersGuessedElement.innerHTML = this.letters.join(', ');  // Adds leading comma
                 this.guesses--;
                 this.isHint();
-                guessElement.innerHTML = (" " + this.guesses);
+                guessElement.innerHTML = ("  " + this.guesses);
 
                 if (!this.isWin())   // Check win condition, check lose condition if win condition is false
                     this.isLose();
@@ -135,11 +143,13 @@ class Hangman{
             else {  // If letter has already been guessed
                 sysElement.innerHTML = "Letter already guessed.";
                 this.flashText(sysElement, "yellow");
+                invalid.play();
             }
         }
         else {  // If a key that is not a-z has been pressed
             sysElement.innerHTML = "Invalid key.  Enter a letter between a-z";
-            this.flashMsg(sysElement, "yellow");
+            this.flashText(sysElement, "yellow");
+            invalid.play();
         }
     }
 
@@ -162,7 +172,7 @@ class Hangman{
     showHint() {
         hintBtnElement.setAttribute('disabled', '');
         this.guesses -= this.calcHintCost(this.correctWord.length)
-        guessElement.innerHTML = this.guesses;
+        guessElement.innerHTML = "  " + this.guesses;
         this.hintActive = false;
         hintElement.classList.remove('d-none');
     }
@@ -221,8 +231,9 @@ class Hangman{
     isWin(){    
         if (this.currentWord.indexOf('_') == -1) {      // Works for words with no spaces.  Must change if I want to implement spaces
             sysElement.innerHTML = "You win!"
-            this.flashText(sysElement,"limegreen");
-            this.flashText(wordElement, "limegreen");
+            youwin.play();
+            this.flashText(sysElement,"lime");
+            this.flashText(wordElement, "lime");
             this.wins++;
             winsElement.innerHTML = (" " + this.wins);
             this.gameOver = true;
@@ -234,6 +245,7 @@ class Hangman{
     isLose(){   
         if (this.guesses == 0) {
             sysElement.innerHTML = "You lose.  The correct word was " + this.correctWord;
+            youlose.play();
             this.flashText(sysMessage,"red");
             this.lose++;
             loseElement.innerHTML = (" " + this.lose);
@@ -242,6 +254,25 @@ class Hangman{
     }
 
 }
+
+// Function for auto-playing through playlist
+function playlist() {
+    var songIndex = 0;
+    nowPlayingElement.innerHTML = bgmSong[0];
+    musicPlayer.addEventListener('ended', function(){
+        // Goes to next song on list.  If at end, goes back to first song
+        if (songIndex != bgm.length - 1)
+            songIndex++;
+        else 
+            songIndex = 0;
+        bgmElement.src = bgm[songIndex];
+        nowPlayingElement.innerHTML = bgmSong[songIndex];
+        musicPlayer.load();
+        musicPlayer.play();
+    });
+}
+
+
 
 //main
 

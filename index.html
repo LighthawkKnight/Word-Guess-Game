@@ -12,7 +12,7 @@
     <title>Overlord Hangman</title>
 </head>
 
-<body>
+<body onLoad = "playlist();">
 
     <!-- Header -->
     <div class = "container">
@@ -70,12 +70,16 @@
     </div>
     <br><br>
     <div class = "container-fluid">
-        <div class = "row text-xl-center text-xs-center">
-            <div class = "col-12">
-            <audio controls autoplay>
-                <source src="assets/bgm/01 GO CRY GO.mp3" type="audio/mpeg">
+        <div class = "row">
+            <div class = "col-6 text-xl-right text-xs-right pr-4 pr-l-4">
+            <audio controls autoplay id = "player">
+                <source src="assets/bgm/01 GO CRY GO.mp3" type="audio/mpeg" id = "bgm">
                 If you're reading this, your browser does not support this audio element.
             </audio>
+            </div>
+            <div class = "col-6 text-xl-left text-xs-left pl-xl-4 pl-l-4" id = "song">
+                Now Playing:<br>
+                <div id = "nowPlaying"></div>
             </div>
         </div>
     </div>
