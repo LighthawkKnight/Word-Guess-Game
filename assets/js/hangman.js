@@ -257,8 +257,13 @@ class Hangman{
 
 // Function for auto-playing through playlist
 function playlist() {
-    var songIndex = 0;
-    nowPlayingElement.innerHTML = bgmSong[0];
+    var ssi = Math.floor(Math.random() * bgm.length);       // Random starting song index
+    var songIndex = ssi;
+    bgmElement.src = bgm[ssi];
+    nowPlayingElement.innerHTML = bgmSong[ssi];
+    musicPlayer.load();
+    musicPlayer.play();
+    // Event listener that triggers when the current song reaches its ed
     musicPlayer.addEventListener('ended', function(){
         // Goes to next song on list.  If at end, goes back to first song
         if (songIndex != bgm.length - 1)
@@ -273,10 +278,7 @@ function playlist() {
 }
 
 
-
 //main
-
-
 var hangman = new Hangman();
 
 document.onkeyup = function(event) {
